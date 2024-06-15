@@ -1,12 +1,14 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Collections;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class BookManagerTest {
 	
 	private BookManager bookManager;
-	private BookManager.Book book1;	// 모든 유닛 테스트에서 사용하는 객체이기 때문에 전역 선함 
+	private BookManager.Book book1;	// 모든 유닛 테스트에서 사용하는 객체이기 때문에 전역 선언함 
 
     @BeforeEach
     void setUp() {
@@ -205,13 +207,88 @@ class BookManagerTest {
 	    BookManager.Book book2;
 		book2 = bookManager.new Book("", "소프트웨어 공학", "Tom", 2014);
 		
-		// id가 1인 book1 추가 
+		// id가 없는(invalid한) book2 추가 
 		String answer1 = "변수명을 정확히 입력하세요.";
 		String result1 = bookManager.AddBook(book2);
 		
 		assertEquals(answer1, result1, answer1 + "가 출력되지 않았습니다." );
 		System.out.println(result1);
 	}
+	
+	// 이진 탐색 함수 테스트
+	
+	// 찾는 책이 리스트에 있는 경우 
+    @Test
+    void testSearchBS_BookExists() {
+        System.out.println("testSearchBS_BookExists() 실행");
+        BookManager.Book book2 = bookManager.new Book("2", "소프트웨어 공학", "Tom", 2014);
+        BookManager.Book book3 = bookManager.new Book("3", "분산 컴퓨팅", "Yoon", 2024);
+        BookManager.Book book4 = bookManager.new Book("4", "한국사", "Lee", 2018);
+        BookManager.Book book5 = bookManager.new Book("5", "세계사", "Kim", 2020);
+        BookManager.Book book6 = bookManager.new Book("6", "과학사", "Park", 2019);
+        BookManager.Book book7 = bookManager.new Book("7", "미술사", "Choi", 2015);
+        
+        bookManager.AddBook(book1);
+        bookManager.AddBook(book2);
+        bookManager.AddBook(book3);
+        bookManager.AddBook(book4);
+        bookManager.AddBook(book5);
+        bookManager.AddBook(book6);
+        bookManager.AddBook(book7);
+
+        // 초기 상태에 책 리스트가 정렬되어 있지 않도록 shuffle 
+        Collections.shuffle(bookManager.books);
+
+        String answer = "검색 결과:" + System.lineSeparator() + "Book{id: '4', 제목: '한국사', 저자: 'Lee', 출판년도: 2018}";
+        String result = bookManager.search_bs("4");
+
+        assertEquals(answer, result, answer + "가 출력되지 않았습니다.");
+        System.out.println(result);
+    }
+
+    @Test
+    void testSearchBS_BookNotExists() {
+        System.out.println("testSearchBS_BookNotExists() 실행");
+        BookManager.Book book2 = bookManager.new Book("2", "소프트웨어 공학", "Tom", 2014);
+        BookManager.Book book3 = bookManager.new Book("3", "분산 컴퓨팅", "Yoon", 2024);
+        // id가 4인 객체는 생성하지 않음 
+        BookManager.Book book5 = bookManager.new Book("5", "세계사", "Kim", 2020);
+        BookManager.Book book6 = bookManager.new Book("6", "과학사", "Park", 2019);
+        BookManager.Book book7 = bookManager.new Book("7", "미술사", "Choi", 2015);
+        
+        bookManager.AddBook(book1);
+        bookManager.AddBook(book2);
+        bookManager.AddBook(book3);
+        bookManager.AddBook(book5);
+        bookManager.AddBook(book6);
+        bookManager.AddBook(book7);
+        
+        // 초기 상태에 책 리스트가 정렬되어 있지 않도록 shuffle 
+        Collections.shuffle(bookManager.books);
+
+        String answer = "검색된 도서가 없습니다.";
+        String result = bookManager.search_bs("4");
+
+        assertEquals(answer, result, answer + "가 출력되지 않았습니다.");
+        System.out.println(result);
+    }
+
+    @Test
+    void testSearchBS_InvalidBookID() {
+        System.out.println("testSearchBS_InvalidBookID() 실행");
+        BookManager.Book book2 = bookManager.new Book("2", "소프트웨어 공학", "Tom", 2014);
+        BookManager.Book book3 = bookManager.new Book("3", "분산 컴퓨팅", "Yoon", 2024);
+
+        bookManager.AddBook(book1);
+        bookManager.AddBook(book2); 
+        bookManager.AddBook(book3);
+
+		String answer = "ID 값을 정확히 입력하세요.";
+        String result = bookManager.search_bs("0");
+
+        assertEquals(answer, result, answer + "가 출력되지 않았습니다.");
+        System.out.println(result);
+    }
 }
 
 
