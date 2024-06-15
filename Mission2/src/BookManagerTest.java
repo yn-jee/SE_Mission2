@@ -1,6 +1,5 @@
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
 import java.util.Collections;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -281,7 +280,7 @@ class BookManagerTest {
         BookManager.Book book3 = bookManager.new Book("3", "분산 컴퓨팅", "Yoon", 2024);
 
         bookManager.AddBook(book1);
-        bookManager.AddBook(book2);
+        bookManager.AddBook(book2); 
         bookManager.AddBook(book3);
 
 		String answer = "ID 값을 정확히 입력하세요.";
