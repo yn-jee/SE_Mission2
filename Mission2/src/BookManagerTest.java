@@ -1,5 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -288,6 +289,44 @@ class BookManagerTest {
 
         assertEquals(answer, result, answer + "가 출력되지 않았습니다.");
         System.out.println(result);
+    }
+    
+    @Test
+    void testSearchPerformance() {
+		// 탐색을 위한 1000개 Book 객체 생성 
+        bookManager = new BookManager();
+        for (int i = 1; i <= 1000; i++) {
+            bookManager.AddBook(bookManager.new Book(String.valueOf(i), "temp", "temp", 1));
+        }
+
+        // 초기 상태에 책 리스트가 정렬되어 있지 않도록 shuffle 
+        Collections.shuffle(bookManager.books);
+        // 두 메서드를 동일한 shuffle 결과로 비교하기 위해, books의 순서가 동일한 shuffledBookManager 객체 생성
+        BookManager shuffledBookManager = new BookManager();
+        shuffledBookManager.books = new ArrayList<>(bookManager.books);
+        
+        
+        // ---- 기본 search 메서드 성능 테스트 ----
+        long startTime = System.nanoTime();
+        for (int i = 1; i <= 1000; i++) { 
+            bookManager.SearchBook(String.valueOf(i));  // id가 i인 책 찾기
+        }
+        long endTime = System.nanoTime();
+        long durationSearch = endTime - startTime;
+        System.out.println("1000번의 SearchBook 함수 실행 시간: " + durationSearch + " ns");
+
+        
+        // ---- 이진 탐색 search_bs 메서드 성능 테스트 ----
+        startTime = System.nanoTime();
+        for (int i = 1; i <= 1000; i++) {
+        	shuffledBookManager.SearchBook(String.valueOf(i));  // id가 i인 책 찾기
+            // shuffledBookManager 객체에서 탐색함으로 동일한 shuffle 결과로 비교 
+        }
+        endTime = System.nanoTime();
+        long durationSearchBS = endTime - startTime;
+        System.out.println("1000번의 search_bs 함수 실행 시간: " + durationSearchBS + " ns");
+
+        assertTrue(durationSearch > durationSearchBS, "search_bs 함수가 SearchBook 함수보다 빨라야 합니다.");
     }
 }
 
