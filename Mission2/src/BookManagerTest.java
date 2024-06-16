@@ -308,7 +308,7 @@ class BookManagerTest {
         
         // ---- 기본 search 메서드 성능 테스트 ----
         long startTime = System.nanoTime();
-        for (int i = 1; i <= 1000; i++) {
+        for (int i = 1; i <= 1000; i++) { 
             bookManager.SearchBook(String.valueOf(i));  // id가 i인 책 찾기
         }
         long endTime = System.nanoTime();
