@@ -293,7 +293,7 @@ class BookManagerTest {
     
     @Test
     void testSearchPerformance() {
-		// 탐색을 위한 1000개 Book 객체 생성
+		// 탐색을 위한 1000개 Book 객체 생성 
         bookManager = new BookManager();
         for (int i = 1; i <= 1000; i++) {
             bookManager.AddBook(bookManager.new Book(String.valueOf(i), "temp", "temp", 1));
