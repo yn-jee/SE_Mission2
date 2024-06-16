@@ -17,10 +17,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                // JUnit 5 테스트 실행을 위한 classpath 설정
-                def classpath = "classes:lib/*"
-
-                // JUnit 5 테스트 실행
+                // JUnit 5 테스트 실행을 위한 classpath 설정 및 실행
                 sh 'java -cp classes:lib/* org.junit.platform.console.ConsoleLauncher --scan-classpath > test_results.txt'
             }
         }
