@@ -4,22 +4,27 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // 소스코드 체크아웃 
+                // 소스코드 체크아웃
                 checkout scm
             }
         }
         stage('Build') {
             steps {
-                // Java 파일들을 컴파일하여 생성된 클래스 파일을 classes 디렉토리에 저장
-                sh 'mkdir -p classes'
-                sh 'javac -encoding UTF-8 -d classes Mission2/src/*.java'
+                script {
+                    // Java 파일들을 컴파일하여 생성된 클래스 파일을 classes 디렉토리에 저장
+                    def junitClasspath = 'eclipse/plugins/junit-jupiter-api-5.7.1.jar:eclipse/plugins/junit-platform-console-standalone-1.7.1.jar'
+                    sh 'mkdir -p classes'
+                    sh "javac -encoding UTF-8 -cp ${junitClasspath} -d classes Mission2/src/*.java"
+                }
             }
         }
         stage('Test') {
             steps {
-                // JUnit 5 테스트 실행 
-                def classpath = 'classes:lib/: path/to/eclipse/plugins/junit-platform-console-standalone-1.7.1.jar'
-                sh 'java -cp classes:lib/: path/to/eclipse/plugins/junit-platform-console-standalone-1.7.1.jar org.junit.platform.console.ConsoleLauncher --scan-classpath > test_results.txt'
+                script {
+                    // JUnit 5 테스트 실행
+                    def junitClasspath = 'classes:eclipse/plugins/junit-jupiter-api-5.7.1.jar:eclipse/plugins/junit-platform-console-standalone-1.7.1.jar'
+                    sh "java -cp ${junitClasspath} org.junit.platform.console.ConsoleLauncher --scan-classpath --classpath classes > test_results.txt"
+                }
             }
         }
     }
