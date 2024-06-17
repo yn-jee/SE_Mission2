@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        JAVA_OPTS = '-Dfile.encoding=UTF-8'
+    }
+
     stages {
         stage('Checkout') {
             steps {
